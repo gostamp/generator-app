@@ -1,0 +1,10 @@
+processors:
+  - preset: cspell
+  - preset: gitleaks
+  - preset: hadolint
+  - preset: markdownlint
+  - preset: shellcheck
+    # TODO: remove once stylist updated in devcontainer.
+    check:
+      command: "shellcheck --check-sourced --color=never --format=json --source-path=SCRIPTDIR --external-sources"
+  - preset: shfmt

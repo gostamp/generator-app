@@ -1,0 +1,107 @@
+Name: app
+
+values:
+  - key: DstPath
+    name: Destination Path
+    help: The path to generate files to.
+    mode: arg
+    default: "."
+    transform: "trim,expand-path"
+    validate: required
+
+  - key: DstDir
+    mode: hidden
+    default: "{{ .DstPath | osBase }}"
+
+  - key: AppOwner
+    help: The app owner (i.e. the owning GitHub user or organization).
+    default: "{{ .DstPath | osDir | osBase | dasherize }}"
+    validate: required
+
+  - key: AppName
+    help: The app name (i.e. the git and/or docker repo name).
+    default: "{{ .DstDir | dasherize }}"
+    validate: required
+
+  - key: UseEncryptedSecrets
+    help: Determines whether to include SOPS files for encrypting secrets.
+    type: bool
+    default: true
+
+  - key: GitHubUsername
+    name: GitHub Username
+    flag: github-username
+    help: The GitHub username to add in '.github/CODEOWNERS'.
+    default: '{{ env "USER" }}'
+    validate: required
+
+tasks:
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/.devcontainer/"
+    dst: "{{ .DstPath }}/.devcontainer/"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/.github/"
+    dst: "{{ .DstPath }}/.github/"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/.vscode/"
+    dst: "{{ .DstPath }}/.vscode/"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/bin/"
+    dst: "{{ .DstPath }}/bin/"
+    mode: "0755"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/etc/"
+    dst: "{{ .DstPath }}/etc/"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/.dockerignore"
+    dst: "{{ .DstPath }}/.dockerignore"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/.editorconfig"
+    dst: "{{ .DstPath }}/.editorconfig"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/.env.example"
+    dst: "{{ .DstPath }}/.env.example"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/.gitignore"
+    dst: "{{ .DstPath }}/.gitignore"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/.sops.yaml"
+    dst: "{{ .DstPath }}/.sops.yaml"
+    if: "{{ .UseEncryptedSecrets }}"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/.stylist.yml"
+    dst: "{{ .DstPath }}/.stylist.yml"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/cspell.yml"
+    dst: "{{ .DstPath }}/cspell.yml"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/docker-compose.yml"
+    dst: "{{ .DstPath }}/docker-compose.yml"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/Dockerfile"
+    dst: "{{ .DstPath }}/Dockerfile"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/LICENSE"
+    dst: "{{ .DstPath }}/LICENSE"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/Makefile"
+    dst: "{{ .DstPath }}/Makefile"
+
+  - type: generate
+    src: "{{ .SrcPath }}/_templates/README.md"
+    dst: "{{ .DstPath }}/README.md"
