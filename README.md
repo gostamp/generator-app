@@ -9,3 +9,4 @@ stamp add git@github.com:gostamp/generator-app.git
 # Use them to create a new project at ./my-app.
 stamp new app ./my-app
 ```
+
