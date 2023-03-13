@@ -1,4 +1,5 @@
-Name: app
+name: app
+description: Generate a base application project.
 
 values:
   - key: DstPath
